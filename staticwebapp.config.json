@@ -1,0 +1,22 @@
+{
+  "mimeTypes": {
+    ".webmanifest": "application/manifest+json"
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff"
+  },
+  "routes": [
+    {
+      "route": "/sw.js",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/manifest.webmanifest",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    }
+  ]
+}

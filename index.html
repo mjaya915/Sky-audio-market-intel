@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#00aeef" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Sky Intel" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Sky Audio Market Intel</title>
+    <link rel="icon" href="sky-audio-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="sky-audio-icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#dashboard" aria-label="Sky Audio Market Intel">
+          <span class="brand-mark">SA</span>
+          <span>
+            <strong>Sky Audio</strong>
+            <small>Market Intel</small>
+          </span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-link active" data-view="dashboard" type="button">
+            <span class="nav-icon" aria-hidden="true">01</span>
+            Dashboard
+          </button>
+          <button class="nav-link" data-view="events" type="button">
+            <span class="nav-icon" aria-hidden="true">02</span>
+            Events
+          </button>
+          <button class="nav-link" data-view="directory" type="button">
+            <span class="nav-icon" aria-hidden="true">03</span>
+            Directory
+          </button>
+          <button class="nav-link" data-view="manage" type="button">
+            <span class="nav-icon" aria-hidden="true">04</span>
+            Manage
+          </button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">2026 opportunity tracker</p>
+            <h1 id="view-title">Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-button hidden" id="installApp" type="button">Install</button>
+            <button class="ghost-button" id="exportData" type="button">Export</button>
+            <label class="ghost-button import-label" for="importData">Import</label>
+            <input id="importData" class="sr-only" type="file" accept="application/json" />
+          </div>
+        </header>
+
+        <section class="view active" id="dashboard-view" aria-labelledby="view-title">
+          <div class="kpi-grid" id="kpiGrid"></div>
+
+          <div class="dashboard-grid">
+            <section class="panel panel-wide">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Contact pipeline</p>
+                  <h2>Stage Progress</h2>
+                </div>
+              </div>
+              <div class="stage-chart" id="stageChart"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Remaining this year</p>
+                  <h2>Events by Month</h2>
+                </div>
+              </div>
+              <div class="month-chart" id="monthChart"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Focus</p>
+                  <h2>Segments</h2>
+                </div>
+              </div>
+              <div class="segment-list" id="segmentList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Next in calendar</p>
+                  <h2>Upcoming Events</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="upcomingEvents"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Warm path</p>
+                  <h2>Introducer Queue</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="introducerQueue"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="events-view" aria-labelledby="view-title">
+          <div class="toolbar">
+            <label class="search-box">
+              <span>Search</span>
+              <input id="eventSearch" type="search" placeholder="Event, venue, organizer" />
+            </label>
+            <label class="filter-box">
+              <span>Status</span>
+              <select id="eventStatusFilter"></select>
+            </label>
+            <button class="primary-button" id="addEventFromEvents" type="button">Add Event</button>
+          </div>
+          <div class="drill-notice hidden" id="eventDrillNotice"></div>
+          <div class="event-grid" id="eventsGrid"></div>
+        </section>
+
+        <section class="view" id="directory-view" aria-labelledby="view-title">
+          <div class="toolbar directory-toolbar">
+            <label class="search-box">
+              <span>Search</span>
+              <input id="contactSearch" type="search" placeholder="Company, person, email" />
+            </label>
+            <label class="filter-box">
+              <span>Segment</span>
+              <select id="segmentFilter"></select>
+            </label>
+            <label class="filter-box">
+              <span>Stage</span>
+              <select id="stageFilter"></select>
+            </label>
+            <button class="primary-button" id="addContactFromDirectory" type="button">Add Contact</button>
+          </div>
+          <div class="drill-notice hidden" id="contactDrillNotice"></div>
+          <div class="directory-grid" id="directoryGrid"></div>
+        </section>
+
+        <section class="view" id="manage-view" aria-labelledby="view-title">
+          <div class="manage-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Lead contact</p>
+                  <h2 id="contactFormTitle">Add Contact</h2>
+                </div>
+                <button class="ghost-button" id="clearContactForm" type="button">Clear</button>
+              </div>
+
+              <form class="form-grid" id="contactForm">
+                <input type="hidden" id="contactId" />
+                <label>
+                  Company
+                  <input id="company" required />
+                </label>
+                <label>
+                  Segment
+                  <select id="segment" required></select>
+                </label>
+                <label>
+                  Contact name
+                  <input id="contactName" />
+                </label>
+                <label>
+                  Role
+                  <input id="role" />
+                </label>
+                <label>
+                  Email
+                  <input id="email" type="email" />
+                </label>
+                <label>
+                  Mobile
+                  <input id="phone" />
+                </label>
+                <label>
+                  Priority
+                  <select id="priority">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                  </select>
+                </label>
+                <label>
+                  Stage
+                  <select id="stage"></select>
+                </label>
+                <label>
+                  Estimated value
+                  <input id="estimatedValue" />
+                </label>
+                <label>
+                  Suggested package
+                  <input id="package" />
+                </label>
+                <label class="span-2">
+                  Website / source
+                  <input id="source" />
+                </label>
+                <label class="span-2">
+                  Recommended action
+                  <textarea id="action" rows="2"></textarea>
+                </label>
+                <label class="span-2">
+                  Notes
+                  <textarea id="notes" rows="3"></textarea>
+                </label>
+
+                <div class="form-section-title span-2">Introducer</div>
+                <label>
+                  Company
+                  <input id="introCompany" />
+                </label>
+                <label>
+                  Segment
+                  <select id="introSegment"></select>
+                </label>
+                <label>
+                  Contact name
+                  <input id="introName" />
+                </label>
+                <label>
+                  Role
+                  <input id="introRole" />
+                </label>
+                <label>
+                  Email
+                  <input id="introEmail" type="email" />
+                </label>
+                <label>
+                  Mobile
+                  <input id="introPhone" />
+                </label>
+                <div class="form-actions span-2">
+                  <button class="primary-button" type="submit">Save Contact</button>
+                  <button class="danger-button" id="deleteContact" type="button">Delete</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Event record</p>
+                  <h2 id="eventFormTitle">Add Event</h2>
+                </div>
+                <button class="ghost-button" id="clearEventForm" type="button">Clear</button>
+              </div>
+
+              <form class="form-grid" id="eventForm">
+                <input type="hidden" id="eventId" />
+                <label class="span-2">
+                  Event name
+                  <input id="eventName" required />
+                </label>
+                <label>
+                  Start date
+                  <input id="eventStart" type="date" />
+                </label>
+                <label>
+                  End date
+                  <input id="eventEnd" type="date" />
+                </label>
+                <label>
+                  Venue
+                  <input id="eventVenue" />
+                </label>
+                <label>
+                  Organizer
+                  <input id="eventOrganizer" />
+                </label>
+                <label>
+                  Opportunity
+                  <input id="eventOpportunity" />
+                </label>
+                <label>
+                  Status
+                  <select id="eventStatus"></select>
+                </label>
+                <label class="span-2">
+                  Public scale signal
+                  <textarea id="eventScale" rows="2"></textarea>
+                </label>
+                <label class="span-2">
+                  Likely AV scope
+                  <textarea id="eventScope" rows="2"></textarea>
+                </label>
+                <label class="span-2">
+                  Best outreach path
+                  <textarea id="eventOutreach" rows="2"></textarea>
+                </label>
+                <div class="form-actions span-2">
+                  <button class="primary-button" type="submit">Save Event</button>
+                  <button class="danger-button" id="deleteEvent" type="button">Delete</button>
+                </div>
+              </form>
+
+              <div class="data-tools">
+                <button class="ghost-button" id="resetData" type="button">Reset Seed Data</button>
+                <p>Edits are saved in this browser. Use Export and Import to move the same data to another device.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="modal-backdrop" data-close-modal type="button" aria-label="Close details"></button>
+      <section class="detail-panel">
+        <div class="detail-actions">
+          <button class="icon-button" id="detailEdit" type="button" aria-label="Edit event">
+            <span class="icon-pencil" aria-hidden="true"></span>
+          </button>
+          <button class="icon-button close-icon" id="detailClose" type="button" aria-label="Close details"></button>
+        </div>
+        <p class="eyebrow">Event details</p>
+        <h2 id="detailTitle"></h2>
+        <div class="detail-content" id="detailContent"></div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
